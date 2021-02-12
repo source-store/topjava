@@ -1,23 +1,27 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Repository
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(meal, 1));
-        MealsUtil.meals.forEach(meal -> save(meal, 2));
-//        MealsUtil.meals.forEach(this::save);
-
+//        MealsUtil.meals.forEach(meal -> save(meal, 1));
+        for (Meal meal : MealsUtil.meals) {
+            save(meal, 1);
+        }
     }
 
     @Override
@@ -46,12 +50,18 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
-        List<Meal> rezultMeal = new ArrayList<>(repository.values().stream().map(s->s.get(userId))
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList()));
-
-        return rezultMeal;
+    public List<Meal> getAll(int userId) {
+        return repository.get(userId).values().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
+    @Override
+    public List<Meal> getFilter(LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd, int userId) {
+        return repository.values().stream()
+                .map(s -> s.get(userId))
+                .filter(meal -> meal.getDate().isAfter(dateStart) && meal.getDate().isBefore(dateStart) &&
+                        meal.getTime().isAfter(timeStart) && meal.getTime().isBefore(timeEnd))
+                .collect(Collectors.toList());
+    }
+
+
 }
 
