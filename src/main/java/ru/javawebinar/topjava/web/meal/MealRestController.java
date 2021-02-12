@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
@@ -58,8 +59,24 @@ public class MealRestController {
         return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public List<MealTo> getAllMealToByFilterTimeDate(LocalDate dateStart, LocalDate dateEnd,
-                                                     LocalTime timeStart, LocalTime timeEnd) {
-        return service.getAllMealToByFilterTimeDate(dateStart, dateEnd, timeStart,timeEnd, SecurityUtil.authUserId());
+    public synchronized List<MealTo> getFilteredByDateAndTime(HttpServletRequest request){
+        log.info("getAllFiltered");
+        String startD = request.getParameter("startDate");
+        String endD = request.getParameter("endDate");
+        String startT = request.getParameter("startTime");
+        String endT = request.getParameter("endTime");
+
+        LocalDate startDate = (startD == null || startD.isEmpty())? LocalDate.MIN : LocalDate.parse(startD);
+        LocalDate endDate = (endD == null || endD.isEmpty())? LocalDate.MAX : LocalDate.parse(endD);
+        LocalTime startTime = (startT == null || startT.isEmpty())? LocalTime.MIN : LocalTime.parse(startT);
+        LocalTime endTime = (endT == null || endT.isEmpty())? LocalTime.MAX.withNano(0).withSecond(0) : LocalTime.parse(endT);
+
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("startTime", startTime);
+        request.setAttribute("endTime", endTime);
+
+        return MealsUtil.getFilteredByTime(service.getFilteredByDate(SecurityUtil.authUserId(), startDate, endDate),startTime,endTime, SecurityUtil.authUserCaloriesPerDay());
     }
+
 }

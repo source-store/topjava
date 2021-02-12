@@ -44,11 +44,9 @@ public class MealService {
         return repository.getAll(userId);
     }
 
-    public List<MealTo> getAllMealToByFilterTimeDate(LocalDate dateStart, LocalDate dateEnd,
-                                                     LocalTime timeStart, LocalTime timeEnd, int userId) {
-        return MealsUtil.getTos(repository.getFilter(dateStart, dateEnd, timeStart,timeEnd,userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
-                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
-                .collect(Collectors.toList());
+    public List<Meal> getFilteredByDate(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.getFilteredByDate(userId, startDate, endDate);
     }
+
 
 }

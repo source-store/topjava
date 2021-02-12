@@ -18,31 +18,32 @@
 </head>
 <body>
 <section>
-    <h3><a href="index.html">Home</a></h3>
+    <h2><a href="index.html">Home</a></h2>
+    <h2>My food</h2>
+    <form method="post" action="meals?action=filter">
+        <table id="filters">
+            <tr>
+                <th>От даты</th>
+                <td> <input type="date" name="startDate" value="${startDate}"></td>
+                <th>От времени</th>
+                <td> <input type="time" name="startTime" value="${startTime}"></td>
+            </tr>
+            <tr>
+                <th>До даты</th>
+                <td> <input type="date" name="endDate" value="${endDate}"></td>
+                <th>До времени</th>
+                <td> <input type="time" name="endTime" value="${endTime}"></td>
+            </tr>
+            <tr>
+                <td align="right"><button type="submit">Accept</button></td>
+            </tr>
+        </table>
+    </form>
+</section>
+<section>
+<section>
     <hr/>
     <h2>Meals</h2>
-    <form method="post">
-        <table border="1" cellpadding="8" cellspacing="0">
-            <thead>
-            <tr>
-                <th>От даты (включая)</th>
-                <th>До даты (включая)</th>
-                <th>От времени (включая)</th>
-                <th>От времени (включая)</th>
-            </tr>
-            </thead>
-            <tr>
-                <td><input type="date" value="" name="dateStart" required></td>
-                <td><input type="date" value="" name="dateEnd" required></td>
-                <td><input type="time" value="" name="timeStart" required></td>
-                <td><input type="time" value="" name="timeEnd" required></td>
-            </tr>
-            <p></p>
-        </table>
-        <p></p>
-        <button><a href="meals?action=filter" type="submit">Filter</a></button>
-    </form>
-
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">

@@ -3,9 +3,11 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ public class InMemoryMealRepository implements MealRepository {
     {
         for (Meal meal : MealsUtil.meals) {
             save(meal, 1);
+            save(meal, 2);
         }
     }
 
@@ -56,13 +59,28 @@ public class InMemoryMealRepository implements MealRepository {
     }
     @Override
     public List<Meal> getFilter(LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd, int userId) {
-        return repository.values().stream()
-                .map(s -> s.get(userId))
-                .filter(meal -> meal.getDate().isAfter(dateStart) && meal.getDate().isBefore(dateStart) &&
-                        meal.getTime().isAfter(timeStart) && meal.getTime().isBefore(timeEnd))
+        LocalDate dateStartFilter = dateStart != null ? dateStart : LocalDate.MIN;
+        LocalDate dateEndFilter = dateEnd != null ? dateEnd : LocalDate.MAX;
+        dateEndFilter = dateEndFilter.isBefore(dateStartFilter) ? dateStartFilter : dateEndFilter;
+
+        LocalTime timeStartFilter = timeStart != null ? timeStart : LocalTime.MIN;
+        LocalTime timeEndFilter = timeEnd != null ? timeEnd : LocalTime.MAX;
+        timeEndFilter = timeEndFilter.isBefore(timeStartFilter) ? timeStartFilter : timeEndFilter;
+
+        LocalDateTime finalDateStartFilter = dateStartFilter.atTime(timeStartFilter);
+        LocalDateTime finalDateEndFilter = dateEndFilter.atTime(timeEndFilter);
+
+        return repository.get(userId).values().stream()
+                .filter(meal -> DateTimeUtil.isBetweenDateTime(meal.getDateTime(), finalDateStartFilter, finalDateEndFilter) )
+//                .filter(meal -> meal.getDate().is .isAfter(dateStartFilter) && meal.getDate().isBefore(finalDateEndFilter) && meal.getTime().isAfter(timeStart) && meal.getTime().isBefore(timeEnd))
                 .collect(Collectors.toList());
     }
 
 
+    public synchronized List<Meal> getFilteredByDate(int userId, LocalDate startDate, LocalDate endDate) {
+        return getAll(userId).stream()
+                .filter(meal -> DateTimeUtil.isBetweenDateTime(meal.getDate(), startDate, endDate))
+                .collect(Collectors.toList());
+    }
 }
 
