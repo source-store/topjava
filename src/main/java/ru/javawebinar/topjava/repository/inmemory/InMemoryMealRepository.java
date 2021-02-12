@@ -18,7 +18,6 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-//        MealsUtil.meals.forEach(meal -> save(meal, 1));
         for (Meal meal : MealsUtil.meals) {
             save(meal, 1);
         }
@@ -32,10 +31,12 @@ public class InMemoryMealRepository implements MealRepository {
             repository.get(userId).put(meal.getId(), meal);
             return meal;
         }
-        // handle case: update, but not present in storage-
-        Meal rezultMeal = repository.get(userId) != null ? repository.get(userId).get(meal.getId()) : null ;
+        // handle case: update, but not present in storage
+        Meal old = repository.get(userId) != null
+                ? repository.get(userId).get(meal.getId())
+                : null;
 
-        return rezultMeal != null
+        return old != null
                 ? repository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal) : null;
     }
 
