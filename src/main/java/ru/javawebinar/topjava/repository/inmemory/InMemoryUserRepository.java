@@ -29,6 +29,11 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         log.info("save {}", user);
+        if (user.isNew()){
+            user.setId(counter.getAndIncrement());
+        }
+        repository.put(user.getId(), user);
+
         return user;
     }
 
@@ -42,7 +47,7 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         return repository.values().stream()
-                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
+                .sorted(Comparator.comparing(User::getName))
                 .collect(Collectors.toList());
     }
 
