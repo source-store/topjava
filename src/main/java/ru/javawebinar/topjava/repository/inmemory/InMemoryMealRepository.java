@@ -8,8 +8,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,10 +40,10 @@ public class InMemoryMealRepository implements MealRepository {
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            repository.putIfAbsent(0, new HashMap<>());
             repository.putIfAbsent(1, new HashMap<>());
-            repository.putIfAbsent(2, new HashMap<>());
+            repository.get(0).put(meal.getId(), meal);
             repository.get(1).put(meal.getId(), meal);
-            repository.get(2).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage

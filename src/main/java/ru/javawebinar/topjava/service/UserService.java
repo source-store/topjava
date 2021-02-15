@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.service;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
+import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 
 import java.util.List;
 
@@ -12,9 +14,9 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 @Service
 public class UserService {
 
-    private final UserRepository repository;
+    private final InMemoryUserRepository repository;
 
-    public UserService(UserRepository repository) {
+    public UserService(InMemoryUserRepository repository) {
         this.repository = repository;
     }
 
@@ -41,4 +43,9 @@ public class UserService {
     public void update(User user) {
         checkNotFoundWithId(repository.save(user), user.getId());
     }
+
+    public User change(int userId){
+        return repository.get(userId) != null ? repository.get(userId) : null;
+    }
+
 }

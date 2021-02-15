@@ -50,10 +50,6 @@ public class MealRestController {
         return service.get(id, SecurityUtil.authUserId());
     }
 
-    public synchronized void load (){
-        service.load(SecurityUtil.authUserId());
-    }
-
     public synchronized Collection<Meal> getAll() {
         log.info("getAll");
         return service.getAll(SecurityUtil.authUserId());
