@@ -40,10 +40,10 @@ public class InMemoryMealRepository implements MealRepository {
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.putIfAbsent(0, new HashMap<>());
             repository.putIfAbsent(1, new HashMap<>());
-            repository.get(0).put(meal.getId(), meal);
+            repository.putIfAbsent(2, new HashMap<>());
             repository.get(1).put(meal.getId(), meal);
+            repository.get(2).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage

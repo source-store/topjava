@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.Comparator;
 import java.util.List;
@@ -19,11 +18,11 @@ import java.util.stream.Collectors;
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
-    private AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        save(new User(null, "User", "user@maul.ru", "password", Role.USER));
-        save(new User(null, "Admin", "admin@maul.ru", "password", Role.ADMIN));
+        save(new User(1, "User", "user@maul.ru", "password", Role.USER));
+        save(new User(2, "Admin", "admin@maul.ru", "password", Role.ADMIN));
     }
 
     @Override

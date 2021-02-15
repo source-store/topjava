@@ -14,16 +14,26 @@
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
+        <tr>
+            <th>Id</th>
+            <th>Login</th>
+            <th>Role</th>
+            <th>e-mail</th>
+            <th>Date created</th>
+            <th>Switch user</th>
+        </tr>
+        </thead>
         <c:forEach items="${users}" var="user">
             <jsp:useBean id="user" type="ru.javawebinar.topjava.model.User"/>
             <tr>
                 <td>${user.id}</td>
                 <th><a href="users?action=change&userId=${user.id}">${user.name}</a></th>
+                <td>${user.roles}</td>
                 <td>${user.email}</td>
+                <td>${user.registered}</td>
                 <th><a href="users?action=change&userId=${user.id}">Select user</a></th>
             </tr>
         </c:forEach>
-        </thead>
     </table>
 </section>
 

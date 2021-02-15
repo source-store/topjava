@@ -18,14 +18,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
 
-    MealRestController controller;
     ProfileRestController profileRestController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        controller = appCtx.getBean(MealRestController.class);
         profileRestController = appCtx.getBean(ProfileRestController.class);
     }
 
