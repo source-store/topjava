@@ -20,6 +20,8 @@ public interface MealRepository {
     // ORDERED dateTime desc
     List<Meal> getAll(int userId);
 
-    List<Meal> getFilter(LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd, int userId);
+     List<Meal> getFilteredByDate(int userId, LocalDate startDate, LocalDate endDate);
+
+    void load(int userId);
 
 }

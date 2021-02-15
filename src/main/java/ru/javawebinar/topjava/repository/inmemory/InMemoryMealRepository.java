@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,17 +22,30 @@ public class InMemoryMealRepository implements MealRepository {
 
     {
         for (Meal meal : MealsUtil.meals) {
-            save(meal, 1);
-            save(meal, 2);
+            save(meal, SecurityUtil.authUserId());
         }
     }
 
     @Override
+    public void load(int userId) {
+        if (repository.get(userId) == null) {
+            for (Meal meal : MealsUtil.meals) {
+                meal.setId(counter.incrementAndGet());
+                repository.putIfAbsent(userId, new HashMap<>());
+                repository.get(userId).put(meal.getId(), meal);
+            }
+        }
+    }
+
+    //не понял как убрать этот колхоз, чтобы при выборе пользователя подгружать, при необходимости список еды для него. поэтому загружаю сразу
+    @Override
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.putIfAbsent(userId, new HashMap<>());
-            repository.get(userId).put(meal.getId(), meal);
+            repository.putIfAbsent(1, new HashMap<>());
+            repository.putIfAbsent(2, new HashMap<>());
+            repository.get(1).put(meal.getId(), meal);
+            repository.get(2).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
@@ -55,28 +69,10 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return repository.get(userId).values().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+        return repository.get(userId) != null ? repository.get(userId).values().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList()) : null;
     }
+
     @Override
-    public List<Meal> getFilter(LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd, int userId) {
-        LocalDate dateStartFilter = dateStart != null ? dateStart : LocalDate.MIN;
-        LocalDate dateEndFilter = dateEnd != null ? dateEnd : LocalDate.MAX;
-        dateEndFilter = dateEndFilter.isBefore(dateStartFilter) ? dateStartFilter : dateEndFilter;
-
-        LocalTime timeStartFilter = timeStart != null ? timeStart : LocalTime.MIN;
-        LocalTime timeEndFilter = timeEnd != null ? timeEnd : LocalTime.MAX;
-        timeEndFilter = timeEndFilter.isBefore(timeStartFilter) ? timeStartFilter : timeEndFilter;
-
-        LocalDateTime finalDateStartFilter = dateStartFilter.atTime(timeStartFilter);
-        LocalDateTime finalDateEndFilter = dateEndFilter.atTime(timeEndFilter);
-
-        return repository.get(userId).values().stream()
-                .filter(meal -> DateTimeUtil.isBetweenDateTime(meal.getDateTime(), finalDateStartFilter, finalDateEndFilter) )
-//                .filter(meal -> meal.getDate().is .isAfter(dateStartFilter) && meal.getDate().isBefore(finalDateEndFilter) && meal.getTime().isAfter(timeStart) && meal.getTime().isBefore(timeEnd))
-                .collect(Collectors.toList());
-    }
-
-
     public synchronized List<Meal> getFilteredByDate(int userId, LocalDate startDate, LocalDate endDate) {
         return getAll(userId).stream()
                 .filter(meal -> DateTimeUtil.isBetweenDateTime(meal.getDate(), startDate, endDate))

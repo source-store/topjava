@@ -36,6 +36,11 @@ public class MealService {
         ValidationUtil.checkNotFoundWithId(repository.delete(id, authUserId), id);
     }
 
+    public void load(int authUserId) {
+        repository.load(authUserId);
+    }
+
+
     public Meal get(int id, int authUserId) {
         return ValidationUtil.checkNotFoundWithId(repository.get(id, authUserId), id);
     }

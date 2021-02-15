@@ -30,17 +30,17 @@ public class MealRestController {
     }
 
 
-    public void createMeal(Meal meal) {
+    public synchronized void createMeal(Meal meal) {
         log.info("create {}", meal);
         ValidationUtil.checkNew(meal);
         service.createMeal(meal, SecurityUtil.authUserId());
     }
 
-    public void update(Meal meal) {
+    public synchronized void update(Meal meal) {
         log.info("upate {}", meal);
         service.update(meal, SecurityUtil.authUserId());
     }
-    public void delete(int id) {
+    public synchronized void delete(int id) {
         log.info("delete {}", id);
         service.delete(id, SecurityUtil.authUserId());
     }
@@ -50,13 +50,18 @@ public class MealRestController {
         return service.get(id, SecurityUtil.authUserId());
     }
 
-    public Collection<Meal> getAll() {
+    public synchronized void load (){
+        service.load(SecurityUtil.authUserId());
+    }
+
+    public synchronized Collection<Meal> getAll() {
         log.info("getAll");
         return service.getAll(SecurityUtil.authUserId());
     }
 
-    public List<MealTo> getAllMealTo() {
-        return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    public synchronized List<MealTo> getAllMealTo() {
+        List<Meal> resultMeals = service.getAll(SecurityUtil.authUserId());
+        return resultMeals != null ? MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY) : null;
     }
 
     public synchronized List<MealTo> getFilteredByDateAndTime(HttpServletRequest request){
