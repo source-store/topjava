@@ -32,6 +32,8 @@ CREATE TABLE meals
     dateTime         TIMESTAMP           DEFAULT now() NOT NULL,
     description      VARCHAR                           NOT NULL,
     calories         INTEGER             DEFAULT 2000  NOT NULL,
-    user_id           INTEGER                           NOT NULL
+    user_id           INTEGER                          NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+
 );
 CREATE UNIQUE INDEX meals_unique_email_idx ON meals (dateTime);

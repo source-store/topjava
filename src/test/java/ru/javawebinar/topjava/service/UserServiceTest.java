@@ -15,6 +15,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -76,7 +77,7 @@ public class UserServiceTest {
 
     @Test
     public void getByEmail() {
-        User user = service.getByEmail("admin@gmail.com");
+        User user = service.getByEmail("adminTest@gmail.com");
         assertMatch(user, admin);
     }
 
@@ -89,7 +90,8 @@ public class UserServiceTest {
 
     @Test
     public void getAll() {
-        List<User> all = service.getAll();
+        List<User> all = service.getAll().stream().filter(usr -> usr.getId() == USER_ID || usr.getId() == ADMIN_ID).collect(Collectors.toList());
+        System.out.println(all.toString());
         assertMatch(all, admin, user);
     }
 }
