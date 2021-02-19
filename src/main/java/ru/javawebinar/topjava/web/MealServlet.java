@@ -10,10 +10,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -40,10 +42,16 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        Meal meal = new Meal(
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        String description = request.getParameter("description");
+        String dateT = request.getParameter("dateTime");
+
+        LocalDateTime dateTime = LocalDateTime.parse(dateT, formatter);
+
+        int calories = Integer.parseInt(request.getParameter("calories"));
+
+        Meal meal = new Meal( dateTime,  description, calories);
 
         if (StringUtils.hasLength(request.getParameter("id"))) {
             mealController.update(meal, getId(request));
