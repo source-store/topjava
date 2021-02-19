@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.web.user.ProfileRestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,9 +16,25 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
 
+    private ConfigurableApplicationContext springContext;
+    ProfileRestController profileRestController;
+
+    @Override
+    public void init() {
+        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        profileRestController = springContext.getBean(ProfileRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        springContext.close();
+        super.destroy();
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int userId = Integer.parseInt(request.getParameter("userId"));
+        String action = request.getParameter("action");
         SecurityUtil.setAuthUserId(userId);
         response.sendRedirect("meals");
     }
@@ -25,6 +44,18 @@ public class UserServlet extends HttpServlet {
         log.debug("forward to users");
         String action = request.getParameter("action");
 
-        request.getRequestDispatcher("/users.jsp").forward(request, response);
+        switch (action == null ? "all" : action) {
+            case "change":
+                int userId = Integer.parseInt(request.getParameter("userId"));
+                profileRestController.change(userId);
+                response.sendRedirect("meals");
+                break;
+            case "all":
+            default:
+                log.info("Users All");
+                request.setAttribute("users", profileRestController.getAll());
+                request.getRequestDispatcher("/users.jsp").forward(request, response);
+                break;
+        }
     }
 }
