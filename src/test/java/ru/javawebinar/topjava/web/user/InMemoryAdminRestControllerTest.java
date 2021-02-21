@@ -41,12 +41,6 @@ public class InMemoryAdminRestControllerTest {
     @Before
     public void setUp() {
         // re-initialize
-/*
-        UserRepository repository = appCtx.getBean(UserRepository.class);
-        repository.getAll().forEach(u -> repository.delete(u.getId()));
-        repository.save(UserTestData.user);
-        repository.save(UserTestData.admin);
-*/
         controller.getAll().forEach(u ->controller.delete(u.getId()));
         controller.create(UserTestData.getNew());
         controller.create(UserTestData.getNew());
@@ -57,7 +51,6 @@ public class InMemoryAdminRestControllerTest {
         Optional<User> user = controller.getAll().stream().findFirst();
         System.out.println(user.get().getId());
         controller.delete(user.get().getId());
-//        Assert.assertNull(user.get().getId());
         assertThrows(NotFoundException.class, () -> controller.get(USER_ID));
     }
 
