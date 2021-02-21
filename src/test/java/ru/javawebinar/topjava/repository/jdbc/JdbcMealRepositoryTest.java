@@ -15,14 +15,11 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
-//import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 
 @ContextConfiguration({
