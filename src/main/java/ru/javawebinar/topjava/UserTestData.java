@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava;
 
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
@@ -35,6 +36,10 @@ public class UserTestData {
 
     public static void assertMatch(User actual, User expected) {
         assertThat(actual).usingRecursiveComparison().ignoringFields("registered", "roles").isEqualTo(expected);
+    }
+
+    public static void assertMatch(Meal actual, Meal expected) {
+        assertThat(actual).usingRecursiveComparison().ignoringFields("dateTime").isEqualTo(expected);
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
