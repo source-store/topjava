@@ -37,33 +37,42 @@ public class MealRestControllerTest {
 
     @Test
     public void get() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Optional<Meal> meal = repository.getAll(UserTestData.USER_ID).stream().findFirst();
         int idMeal = meal.get().getId();
         assertNotNull(repository.get(idMeal, UserTestData.USER_ID));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 
     @Test
     public void delete() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Optional<Meal> meal = repository.getAll(UserTestData.USER_ID).stream().findFirst();
         int idMeal = meal.get().getId();
         repository.delete(idMeal, UserTestData.USER_ID);
         assertNull(repository.get(idMeal, UserTestData.USER_ID));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 
     @Test
     public void getAll() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Assert.assertNotNull(repository.getAll(UserTestData.USER_ID));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 
     @Test
     public void create() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Meal meal = repository.save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 14, 0), "Тест ланч", 510),
                 UserTestData.USER_ID);
         assertNotNull(repository.get(meal.getId(), UserTestData.USER_ID));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 
     @Test
     public void update() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         String test = "testDescription";
         Optional<Meal> meal = repository.getAll(UserTestData.USER_ID).stream().findFirst();
         int idMeal = meal.get().getId();
@@ -71,5 +80,6 @@ public class MealRestControllerTest {
         repository.save(meal.get(), UserTestData.USER_ID);
         Meal mealAfterUpdate = repository.get(idMeal, UserTestData.USER_ID);
         Assert.assertEquals(meal.get(), mealAfterUpdate);
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 }

@@ -46,14 +46,18 @@ public class InMemoryAdminRestControllerTest {
 
     @Test
     public void delete() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Optional<User> user = controller.getAll().stream().findFirst();
         System.out.println(user.get().getId());
         controller.delete(user.get().getId());
         assertThrows(NotFoundException.class, () -> controller.get(USER_ID));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 
     @Test
     public void deleteNotFound() {
+        log.info("Start "+ this.getClass().getCanonicalName()+" test");
         Assert.assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
+        log.info("end "+ this.getClass().getCanonicalName()+" test");
     }
 }
