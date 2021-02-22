@@ -1,4 +1,7 @@
 package ru.javawebinar.topjava.web.user;
+/*
+ * @autor A.A.Yakubov
+ * */
 
 import org.junit.Assert;
 import org.junit.Before;

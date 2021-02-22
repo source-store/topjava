@@ -1,4 +1,7 @@
 package ru.javawebinar.topjava.web.meal;
+/*
+ * @autor A.A.Yakubov
+ * */
 
 import org.junit.*;
 import org.slf4j.Logger;

@@ -1,4 +1,7 @@
 package ru.javawebinar.topjava;
+/*
+* @autor A.A.Yakubov
+* */
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;

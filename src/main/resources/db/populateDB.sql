@@ -1,3 +1,8 @@
+/*
+* @autor A.A.Yakubov
+* */
+
+
 DELETE FROM meals;
 DELETE FROM user_roles;
 DELETE FROM users;

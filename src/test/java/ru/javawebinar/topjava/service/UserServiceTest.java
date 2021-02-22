@@ -1,4 +1,7 @@
 package ru.javawebinar.topjava.service;
+/*
+ * @autor A.A.Yakubov
+ * */
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
