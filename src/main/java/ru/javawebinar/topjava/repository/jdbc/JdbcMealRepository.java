@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.repository.jdbc;
 /*
- * @autor A.A.Yakubov
+ * @autor A.V.Yakubov
  * */
 
 import org.springframework.beans.factory.annotation.Autowired;

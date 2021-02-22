@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 /*
- * @autor A.A.Yakubov
+ * @autor A.V.Yakubov
  * */
 
 import org.junit.*;

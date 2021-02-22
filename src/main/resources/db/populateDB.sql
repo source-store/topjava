@@ -1,5 +1,5 @@
 /*
-* @autor A.A.Yakubov
+* @autor A.V.Yakubov
 * */
 
 

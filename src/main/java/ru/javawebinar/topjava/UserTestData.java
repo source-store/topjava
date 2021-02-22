@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava;
 /*
-* @autor A.A.Yakubov
+* @autor A.V.Yakubov
 * */
 
 import ru.javawebinar.topjava.model.Meal;

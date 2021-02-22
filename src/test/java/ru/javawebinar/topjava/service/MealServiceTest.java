@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.service;
 /*
- * @autor A.A.Yakubov
+ * @autor A.V.Yakubov
  * */
 
 import org.junit.Assert;
