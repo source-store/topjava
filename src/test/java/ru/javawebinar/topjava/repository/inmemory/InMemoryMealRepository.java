@@ -9,8 +9,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.Util;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+//import javax.annotation.PostConstruct;
+//import javax.annotation.PreDestroy;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,15 +38,15 @@ public class InMemoryMealRepository implements MealRepository {
         return meals.save(meal);
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        log.info("+++ PostConstruct");
-    }
+//    @PostConstruct
+//    public void postConstruct() {
+//        log.info("+++ PostConstruct");
+//    }
 
-    @PreDestroy
-    public void preDestroy() {
-        log.info("+++ PreDestroy");
-    }
+//    @PreDestroy
+//    public void preDestroy() {
+//        log.info("+++ PreDestroy");
+//    }
 
     @Override
     public boolean delete(int id, int userId) {
