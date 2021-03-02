@@ -1,7 +1,10 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,6 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.rules.AllMethodsTimeRun;
+import ru.javawebinar.topjava.service.rules.MethodTimeRun;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -26,6 +31,19 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+
+
+    @Rule
+    public MethodTimeRun timeRun = new MethodTimeRun();
+    @ClassRule
+    public static AllMethodsTimeRun allMethodsTime = new AllMethodsTimeRun();
+
+
+
+
+    static {
+        SLF4JBridgeHandler.install();
+    }
 
     @Autowired
     private MealService service;
@@ -53,7 +71,7 @@ public class MealServiceTest {
         Meal newMeal = getNew();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), newMeal);
+        MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), created);
     }
 
     @Test
@@ -88,8 +106,8 @@ public class MealServiceTest {
 
     @Test
     public void updateNotOwn() {
-        assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
+        service.update(meal1, ADMIN_ID);
+        assertThrows(NotFoundException.class, () -> MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), meal1));
     }
 
     @Test
