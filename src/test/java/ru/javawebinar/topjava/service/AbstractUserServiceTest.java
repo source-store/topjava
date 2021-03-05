@@ -29,7 +29,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = Profiles.ActiveDbProfileResolver.class)
-public class UserServiceTest {
+public abstract class AbstractUserServiceTest {
 
     @Autowired
     private UserService service;
