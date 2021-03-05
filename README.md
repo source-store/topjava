@@ -2,9 +2,6 @@
 
 [![Build Status](https://api.travis-ci.com/source-store/topjava.svg?branch=HW05)](https://travis-ci.com/source-store/topjava)
 
-[![Build Status](https://api.travis-ci.com/source-store/topjava.svg?branch=HW05)](https://travis-ci.com/source-store/topjava)
-
-
 
 
 Java Enterprise Online Project
