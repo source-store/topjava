@@ -2,16 +2,10 @@ package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.Profiles;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -21,6 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.MealTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest{
 
@@ -36,12 +31,14 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    public void create() {
-        User created = service.create(getNew());
-        int newId = created.id();
-        User newUser = getNew();
+    public void create() throws Exception{
+        User newUser = UserTestData.getNew();
+        User created = service.create(newUser);
+        Integer newId = created.getId();
         newUser.setId(newId);
+
         USER_MATCHER.assertMatch(created, newUser);
+
         USER_MATCHER.assertMatch(service.get(newId), newUser);
     }
 
@@ -59,7 +56,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
 
     @Test
     public void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.delete(UserTestData.NOT_FOUND));
     }
 
     @Test
@@ -70,7 +67,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
 
     @Test
     public void getNotFound() {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.get(UserTestData.NOT_FOUND));
     }
 
     @Test
@@ -81,9 +78,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
 
     @Test
     public void update() {
-        User updated = getUpdated();
+        User updated = UserTestData.getUpdated();
         service.update(updated);
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.get(USER_ID), UserTestData.getUpdated());
     }
 
     @Test
@@ -91,4 +88,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, user);
     }
+
+    @Test
+    public void getWithMeals (){
+        User user = service.getWithMeals(UserTestData.user.getId());
+        MEAL_MATCHER.assertMatch(MealTestData.meals, user.getMeals());
+    }
+
+
 }
