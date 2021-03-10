@@ -35,6 +35,9 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest{
 
     private static final StringBuilder results = new StringBuilder();
 
+    @Autowired
+    protected MealService service;
+
     @Rule
     // http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
     public final Stopwatch stopwatch = new Stopwatch() {
@@ -45,9 +48,6 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest{
             log.info(result + " ms\n");
         }
     };
-
-    @Autowired
-    private MealService service;
 
     @AfterClass
     public static void printResult() {

@@ -15,12 +15,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.MealTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest{
 
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     @Autowired
     private CacheManager cacheManager;
@@ -89,11 +88,4 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest{
         USER_MATCHER.assertMatch(all, admin, user);
     }
 
-    @Test
-    public void getWithMeals (){
-        User user = service.getWithMeals(UserTestData.user.getId());
-        MEAL_MATCHER.assertMatch(MealTestData.meals, user.getMeals());
-    }
-
-
-}
+ }
