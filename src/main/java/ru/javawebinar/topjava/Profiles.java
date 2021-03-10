@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava;
 
+import org.springframework.lang.NonNull;
+
 public class Profiles {
     public static final String
             JDBC = "jdbc",
