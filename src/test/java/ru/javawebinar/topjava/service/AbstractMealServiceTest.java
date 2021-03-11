@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -10,6 +11,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 
 import static java.time.LocalDateTime.of;
 import static org.junit.Assert.assertThrows;
@@ -22,7 +24,7 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Autowired
     protected MealService service;
 
-//    @Test
+    @Test
     public void delete() {
         service.delete(MEAL1_ID, USER_ID);
         assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, USER_ID));
@@ -33,12 +35,12 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
     }
 
-//    @Test
+    @Test
     public void deleteNotOwn() {
         assertThrows(NotFoundException.class, () -> service.delete(MEAL1_ID, ADMIN_ID));
     }
 
-//    @Test
+    @Test
     public void create() {
         Meal created = service.create(getNew(), USER_ID);
         int newId = created.id();
@@ -48,14 +50,14 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
         MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), newMeal);
     }
 
-//    @Test
+    @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
                 service.create(new Meal(null, meal1.getDateTime(), "duplicate", 100), USER_ID));
     }
 
 
-//    @Test
+    @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
@@ -105,6 +107,7 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
+        Assume.assumeFalse(Arrays.asList(environment.getActiveProfiles()).contains("jdbc"));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "  ", 300), USER_ID));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new Meal(null, null, "Description", 300), USER_ID));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Description", 9), USER_ID));
