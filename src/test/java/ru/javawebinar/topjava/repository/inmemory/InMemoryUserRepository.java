@@ -24,6 +24,7 @@ public class InMemoryUserRepository extends InMemoryBaseRepository<User> impleme
         counter.getAndSet(UserTestData.ADMIN_ID + 1);
     }
 
+
     @Override
     public List<User> getAll() {
         return getCollection().stream()
