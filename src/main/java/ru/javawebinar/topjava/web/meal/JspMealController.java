@@ -2,9 +2,7 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +15,7 @@ import java.util.Objects;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
-//@Controller
+@Controller
 @RequestMapping(value = "/meals")
 public class JspMealController extends AbstractMealController{
 
@@ -37,9 +35,15 @@ public class JspMealController extends AbstractMealController{
         return "redirect:/meals";
     }
 
-    @GetMapping("/update")
-    public String update(HttpServletRequest request, Model model) {
-        model.addAttribute("meal", super.get(getValue(request, "id")));
+//    @GetMapping
+//    public String getMeals(Model model) {
+//        model.addAttribute("meals",  MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+//        return "meals";
+//    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable int id, HttpServletRequest request, Model model) {
+        model.addAttribute("meal", super.get(id));
         return "mealForm";
     }
 
@@ -49,9 +53,9 @@ public class JspMealController extends AbstractMealController{
         return "mealForm";
     }
 
-    @GetMapping("/delete")
-    public String delete(HttpServletRequest request) {
-        super.delete(getValue(request, "id"));
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id, HttpServletRequest request) {
+        super.delete(id);
         return "redirect:/meals";
     }
 
