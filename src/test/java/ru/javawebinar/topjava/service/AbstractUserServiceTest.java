@@ -9,9 +9,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -80,11 +78,11 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithException() throws Exception {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", 2000, Role.USER)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", 2000, Role.USER)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", 2000, Role.USER)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 9, true, new Date(), Set.of())));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 10001, true, new Date(), Set.of())));
+        validateRootCause(() -> service.create(USER_BLANK_NAME), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(USER_BLANK_EMAIL), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(USER_BLANK_PASSWORD), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(USER_NOT_IN_CALORIES_RANGE_LOW), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(USER_NOT_IN_CALORIES_RANGE_HIGH), ConstraintViolationException.class);
     }
 
     @Test
